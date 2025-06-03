@@ -1,0 +1,106 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>FreeScene: Mixed Graph Diffusion for 3D Scene Synthesis</title>
+<link href="./files/style.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="content">
+  <h1><strong>FreeScene: Mixed Graph Diffusion for 3D Scene Synthesis from Free Prompts</strong></h1>
+  <p id="authors"><a href="https://cangmushui.github.io/">Tongyuan Bai<sup>1</sup></a>  Wangyuanfan Bai <sup>1</sup></a> <a> Dong Chen<sup>1</sup></a> <a> Tieru Wu<sup>1,3</sup> </a><a href="https://manyili12345.github.io/">Manyi Li<sup>2</sup></a><a href="https://ruim-jlu.github.io/#about"> Rui Ma<sup>1,3,*</sup></a><br>
+    <br>
+  <span style="font-size: 20px"><sup>1</sup> School of Artificial Intelligence, Jilin University</span> <br>
+  <span style="font-size: 20px"><sup>2</sup> School of Software, Shandong University</span> <br>
+  <span style="font-size: 20px"><sup>3</sup> Engineering Research Center of Knowledge-Driven Human-Machine Intelligence, MOE, China</span> <br>
+  <span style="font-size: 20px"><sup>*</sup> Corresponding authors</span>
+  
+
+</p>
+  <br>
+  <img src="./files/teaser.jpg" class="teaser-gif" style="width:100%;"><br>
+  <h3 style="text-align:justify"><em>We introduce FreeScene, a user-friendly controllable indoor scene synthesis framework that allows convenient and
+  effective control with free-form user inputs, including text and/or different types of images (top-view diagram in the left, realistic photograph in
+  the middle, sketch in the right). Leveraging a multimodal agent to extract partial graph priors from user inputs, FreeScene subsequently generates a complete and reasonable scene that conforms to the graph via a generative diffusion model.</em></h3>
+    <font size="+2">
+          <p style="text-align: center;">
+            <a href="https://arxiv.org/pdf/2502.13997" target="_blank">[Paper]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://github.com/cangmushui/FreeScene" target="_blank">[Code]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="files/bibtex.txt" target="_blank">[BibTeX]</a>            
+          </p>
+    </font>
+</div>
+<div class="content">
+  <h2>Abstract</h2>
+  <p>Controllability plays a crucial role in the practical applications of 3D indoor scene synthesis. Existing works either
+  allow rough language-based control, that is convenient but lacks fine-grained scene customization, or employ graph
+  based control, which offers better controllability but demands considerable knowledge for the cumbersome graph
+  design process. To address these challenges, we present
+  FreeScene, a user-friendly framework that enables both convenient and effective control for indoor scene synthesis.
+  Specifically, FreeScene supports free-form user inputs including text description and/or reference images, allowing
+  users to express versatile design intentions. The user inputs are adequately analyzed and integrated into a graph representation 
+  by a VLM-based Graph Designer. We then propose MG-DiT, a Mixed Graph Diffusion Transformer, which
+  performs graph-aware denoising to enhance scene generation. Our MG-DiT not only excels at preserving graph
+  structure but also offers broad applicability to various tasks, including, but not limited to, text-to-scene, graph-to-scene,
+  and rearrangement, all within a single model. Extensive experiments demonstrate that FreeScene provides an efficient
+  anduser-friendly solution that unifies text-based and graph based scene synthesis, outperforming state-of-the-art methods in terms of 
+  both generation quality and controllability in a range of applications.</p>
+</div>
+<div class="content">
+  <h2>Approach</h2>
+  <p> Given a reference image, text, or either of them, a carefully designed agent called Graph Designer
+  analyzes the objects and their spatial relationships, constructing a partial graph prior that captures both the object
+  types and their spatial relationships. Next, leveraging the proposed MG-DiT, we apply a constrained sampling method that preserves the integrity
+  of the graph prior throughout the noising and denoising processes, while generating the remaining parts. Ultimately, we obtain the
+  complete room layout and perform object retrieval from the 3D-FUTURE dataset, retrieving each object with the most similar OpenCLIP feature
+  (derived from the generated fVQ-VAE indices) within the same category.</p>
+  <br>
+  <img class="summary-img" src="./files/pipeline.jpg" style="width:100%;"> <br>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <figure style="width:48%; text-align: justify;">
+      <img class="summary-img" src="./files/graphdesigner.jpg" style="width:100%;">
+      <figcaption><strong>Graph Designer</strong>: The Graph Designer utilizes a one-shot Chain-of-Thought (CoT) method to guarantee the accuracy
+      of the extraction results. It then parses and preprocesses the VLM
+      responses to ensure compatibility with the MG-DiT inputs.</figcaption>
+    </figure>
+    <figure style="width:48%; text-align: justify;">
+      <img class="summary-img" src="./files/network.jpg" style="width:100%;">
+      <figcaption><strong>Mixed Graph Diffusion Transformer</strong>: MG-DiT conditions on text and timesteps to jointly denoise continuous bounding
+      box features along with discrete graph and fVQ-VAE features. The
+      network consists of input and output processing layers, stacked
+      with several Mixed Graph Transformer Blocks, as illustrated.</figcaption>
+    </figure>
+  </div>
+</div>
+<div class="content">
+  <h2>Results</h2>
+  <br>
+  <figure style="width:90%; text-align: center;">
+    <img class="summary-img" src="./files/t2s_qualitative_00.jpg" style="width:100%;">
+    <figcaption><strong>Result 1:</strong> Qualitative comparisons on text-to-scene generation.</figcaption>
+  </figure>
+  <br>
+  <figure style="width:90%; text-align: center;">
+    <img class="summary-img" src="./files/g2s_qualitative_00.jpg" style="width:100%;">
+    <figcaption><strong>Result 2:</strong> Qualitative comparisons on graph-to-scene generation.</figcaption>
+  </figure>
+  <br> 
+</div>
+
+<!-- <div class="content">
+  <h2>BibTex</h2>
+  <code> @article{ruiz2022dreambooth,<br>
+  &nbsp;&nbsp;title={DreamBooth: Fine Tuning Text-to-image Diffusion Models for Subject-Driven Generation},<br>
+  &nbsp;&nbsp;author={Ruiz, Nataniel and Li, Yuanzhen and Jampani, Varun and Pritch, Yael and Rubinstein, Michael and Aberman, Kfir},<br>
+  &nbsp;&nbsp;booktitle={arXiv preprint arxiv:2208.12242},<br>
+  &nbsp;&nbsp;year={2022}<br>
+  } </code> 
+</div> -->
+<div class="content" id="acknowledgements">
+  <p><strong>Acknowledgements</strong>:
+    This research was supported in part by the National Natural Science Foundation of China (No. 62202199, 62302269),
+    the Excellent Young Scientists Fund Program (Overseas) of Shandong Province (No. 2023HWYQ-034) and the Fundamental Research Funds for the Central Universities.
+  </p>
+</div>
+</body>
+</html>
